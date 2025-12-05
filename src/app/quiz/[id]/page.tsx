@@ -54,22 +54,30 @@ const QuizManagementPage = () => {
         }
     };
 
+    const handleEndQuiz = async () => {
+        try {
+            const res = await axios.post('/api/quiz/end', { quizId: id });
+            if (res.data.success) {
+                setQuiz(prev => prev ? { ...prev, isLive: false } : null);
+            }
+        } catch (error) {
+            console.error("Failed to end quiz:", error);
+            setError("Failed to end quiz");
+        }
+    };
+
     const copyToClipboard = () => {
         navigator.clipboard.writeText(quizLink);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const openQuiz = () => {
-        window.open(quizLink, '_blank');
-    };
-
     useEffect(() => {
         const fetchQuiz = async () => {
             try {
                 setLoading(true);
-                const res = await axios.post(`/api/quiz/get`, { id });
-                setQuiz(res.data.quiz);
+                const res = await axios.post<ApiResponse>(`/api/quiz/get`, { id });
+                setQuiz(res.data.quiz || null);
                 console.log(res.data.quiz);
                 setLoading(false);
             } catch (error) {
@@ -109,7 +117,6 @@ const QuizManagementPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0F0628] via-[#2A1458] to-[#1E0B43] py-8 px-4">
             <div className="max-w-4xl mx-auto">
-                {/* Header with back button */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -129,7 +136,6 @@ const QuizManagementPage = () => {
                     </div>
                 </motion.div>
 
-                {/* Stats */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -166,15 +172,15 @@ const QuizManagementPage = () => {
                             <span className="text-sm">Status</span>
                         </div>
                         <div
-                            className={`text-sm font-medium mt-2 ${quiz.isLive ? 'text-green-400' : 'text-amber-400'
-                                }`}
+                            className={`text-sm font-medium mt-2 ${
+                                quiz.isLive ? 'text-green-400' : 'text-amber-400'
+                            }`}
                         >
                             {quiz.isLive ? 'Live' : 'Draft'}
                         </div>
                     </div>
                 </motion.div>
 
-                {/* Make Live Button and URL Sharing */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -215,11 +221,11 @@ const QuizManagementPage = () => {
                                             )}
                                         </button>
                                         <button
-                                            onClick={openQuiz}
+                                            onClick={handleEndQuiz}
                                             className="p-3 bg-[#E4004B] hover:bg-[#C3003F] rounded-lg transition-colors flex items-center gap-2"
                                         >
                                             <ExternalLink size={18} className="text-white" />
-                                            <span className="text-white text-sm">Open</span>
+                                            <span className="text-white text-sm">End Quiz</span>
                                         </button>
                                     </div>
                                 </div>
@@ -228,14 +234,15 @@ const QuizManagementPage = () => {
                     )}
                 </motion.div>
 
-                {/* Participants List */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
                     className="bg-[#251040]/50 backdrop-blur-md rounded-xl p-6 border border-[#7965C1]/30"
                 >
-                    <h2 className="text-xl font-bold text-white mb-4">Participants ({quiz.participants.length})</h2>
+                    <h2 className="text-xl font-bold text-white mb-4">
+                        Participants ({quiz.participants.length})
+                    </h2>
                     
                     {quiz.participants.length > 0 ? (
                         <div className="overflow-x-auto">
@@ -254,7 +261,9 @@ const QuizManagementPage = () => {
                                                 {participant.name || `Participant ${index + 1}`}
                                             </td>
                                             <td className="py-3 text-white">
-                                                {participant.score !== undefined ? `${participant.score}/${quiz.questions.length}` : 'N/A'}
+                                                {participant.score !== undefined
+                                                    ? `${participant.score}/${quiz.questions.length}`
+                                                    : 'N/A'}
                                             </td>
                                             <td className="py-3 text-white">
                                                 {participant.timeTaken ? `${participant.timeTaken}s` : 'N/A'}

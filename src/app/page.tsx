@@ -65,7 +65,7 @@ function AuthNavbar() {
               </span>
             </Link>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ function AuthNavbar() {
               </span>
             </Link>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -89,7 +89,7 @@ function AuthNavbar() {
               </span>
             </Link>
           </motion.div>
-          
+
           {isAuthenticated && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -114,7 +114,10 @@ function AuthNavbar() {
               animate={{ opacity: 1, scale: 1 }}
               className="flex items-center gap-3"
             >
-              <Link href="/dashboard" className="hidden md:flex items-center gap-2 bg-[#2A1458]/60 px-3 py-1.5 rounded-lg hover:bg-[#2A1458] transition-colors">
+              <Link
+                href="/dashboard"
+                className="hidden md:flex items-center gap-2 bg-[#2A1458]/60 px-3 py-1.5 rounded-lg hover:bg-[#2A1458] transition-colors"
+              >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] flex items-center justify-center">
                   <User size={16} className="text-white" />
                 </div>
@@ -140,7 +143,7 @@ function AuthNavbar() {
                 transition={{ delay: 0.3 }}
               >
                 <Link
-                  href="/auth/signin"
+                  href="/login"
                   className="hidden md:block px-4 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors"
                 >
                   Login
@@ -151,7 +154,7 @@ function AuthNavbar() {
                 whileTap={{ scale: 0.98 }}
               >
                 <Link
-                  href="/auth/signup"
+                  href="/sign-up"
                   className="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] text-white text-sm font-medium flex items-center gap-2 shadow-lg shadow-[#E4004B]/20"
                 >
                   <Zap size={16} />
@@ -177,7 +180,7 @@ export default function HomePage() {
       description:
         "Generate custom quizzes on any topic with our advanced AI. No more searching for questions - let AI do the work for you!",
       color: "from-blue-500/10 to-purple-500/10",
-      link: "/quiz/create"
+      link: "/quiz/create",
     },
     {
       icon: <Sword size={24} className="text-[#7F27FF]" />,
@@ -185,7 +188,7 @@ export default function HomePage() {
       description:
         "Challenge your friends in real-time quiz battles. See who comes out on top in our competitive learning environment.",
       color: "from-purple-500/10 to-pink-500/10",
-      link: "/how-it-works#competitive"
+      link: "/how-it-works#competitive",
     },
     {
       icon: <BarChart3 size={24} className="text-[#7F27FF]" />,
@@ -193,7 +196,7 @@ export default function HomePage() {
       description:
         "Get comprehensive reports on your strengths and weaknesses. Track progress and focus on areas that need improvement.",
       color: "from-pink-500/10 to-red-500/10",
-      link: "/how-it-works#analytics"
+      link: "/how-it-works#analytics",
     },
     {
       icon: <Map size={24} className="text-[#7F27FF]" />,
@@ -201,7 +204,7 @@ export default function HomePage() {
       description:
         "Choose any topic and let AI create a customized syllabus and learning path tailored to your goals and skill level.",
       color: "from-red-500/10 to-orange-500/10",
-      link: "/how-it-works#roadmaps"
+      link: "/how-it-works#roadmaps",
     },
   ];
 
@@ -211,28 +214,28 @@ export default function HomePage() {
       title: "Accelerated Learning",
       description:
         "AI-powered insights help you learn faster and retain more information",
-      link: "/how-it-works#accelerated"
+      link: "/how-it-works#accelerated",
     },
     {
       icon: <UsersRound size={32} className="text-[#7F27FF]" />,
       title: "Social Learning",
       description:
         "Compete with friends and learn together in an engaging environment",
-      link: "/how-it-works#social"
+      link: "/how-it-works#social",
     },
     {
       icon: <Target size={32} className="text-[#7F27FF]" />,
       title: "Focused Improvement",
       description:
         "Identify and work on your weak areas with personalized recommendations",
-      link: "/how-it-works#focused"
+      link: "/how-it-works#focused",
     },
     {
       icon: <Calendar size={32} className="text-[#7F27FF]" />,
       title: "Structured Progress",
       description:
         "Follow AI-generated roadmaps that adapt to your learning pace",
-      link: "/how-it-works#structured"
+      link: "/how-it-works#structured",
     },
   ];
 
@@ -277,29 +280,32 @@ export default function HomePage() {
                 intelligent analytics and tailored educational experiences.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link href="/quiz/create">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Link
+                    href="/quiz/create"
+                    className="px-8 py-4 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] 
+      text-white font-medium flex items-center gap-2 shadow-lg shadow-[#E4004B]/30 cursor-pointer"
                   >
-                    <div
-                      className="px-8 py-4 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] 
-               text-white font-medium flex items-center gap-2 shadow-lg shadow-[#E4004B]/30 cursor-pointer"
-                    >
-                      <Sparkles size={20} />
-                      Create Your First Quiz
-                    </div>
-                  </motion.div>
-                </Link>
-                <Link href="/how-it-works">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 rounded-full bg-transparent border border-[#7965C1] text-white font-medium"
+                    <Sparkles size={20} />
+                    Create Your First Quiz
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Link
+                    href="/how-it-works"
+                    className="px-8 py-4 rounded-full bg-transparent border border-[#7965C1] 
+      text-white font-medium flex items-center justify-center cursor-pointer"
                   >
                     See How It Works
-                  </motion.button>
-                </Link>
+                  </Link>
+                </motion.div>
               </div>
             </motion.div>
 
@@ -367,7 +373,9 @@ export default function HomePage() {
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {benefit.title}
                   </h3>
-                  <p className="text-sm text-[#C4B5FD]">{benefit.description}</p>
+                  <p className="text-sm text-[#C4B5FD]">
+                    {benefit.description}
+                  </p>
                 </motion.div>
               </Link>
             ))}
@@ -523,22 +531,34 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <Link href="/how-it-works" className="hover:text-white transition-colors">
+                  <Link
+                    href="/how-it-works"
+                    className="hover:text-white transition-colors"
+                  >
                     How It Works
                   </Link>
                 </li>
                 <li>
-                  <Link href="/quiz/create" className="hover:text-white transition-colors">
+                  <Link
+                    href="/quiz/create"
+                    className="hover:text-white transition-colors"
+                  >
                     Create Quiz
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard" className="hover:text-white transition-colors">
+                  <Link
+                    href="/dashboard"
+                    className="hover:text-white transition-colors"
+                  >
                     Dashboard
                   </Link>
                 </li>
                 <li>
-                  <Link href="/auth/signin" className="hover:text-white transition-colors">
+                  <Link
+                    href="/auth/signin"
+                    className="hover:text-white transition-colors"
+                  >
                     Login
                   </Link>
                 </li>
@@ -549,17 +569,26 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <Link href="/about" className="hover:text-white transition-colors">
+                  <Link
+                    href="/about"
+                    className="hover:text-white transition-colors"
+                  >
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services" className="hover:text-white transition-colors">
+                  <Link
+                    href="/services"
+                    className="hover:text-white transition-colors"
+                  >
                     Services
                   </Link>
                 </li>
                 <li>
-                  <Link href="/pricing" className="hover:text-white transition-colors">
+                  <Link
+                    href="/pricing"
+                    className="hover:text-white transition-colors"
+                  >
                     Pricing
                   </Link>
                 </li>
@@ -570,17 +599,26 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <Link href="/privacy" className="hover:text-white transition-colors">
+                  <Link
+                    href="/privacy"
+                    className="hover:text-white transition-colors"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms" className="hover:text-white transition-colors">
+                  <Link
+                    href="/terms"
+                    className="hover:text-white transition-colors"
+                  >
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="hover:text-white transition-colors">
+                  <Link
+                    href="/contact"
+                    className="hover:text-white transition-colors"
+                  >
                     Contact Us
                   </Link>
                 </li>
