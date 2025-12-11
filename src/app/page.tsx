@@ -79,16 +79,53 @@ function AuthNavbar() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Link href="/services">
-              <span className="text-sm font-medium text-white/90 hover:text-white transition-colors">
-                Services
-              </span>
-            </Link>
-          </motion.div>
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.2 }}
+>
+  <select
+    aria-label="Services"
+    defaultValue=""
+    onChange={(e) => {
+      const val = e.target.value;
+      if (!val) return;
+      window.location.href = val;
+    }}
+    className="
+      text-sm font-medium 
+      text-white/90 
+      bg-[#2A1458]/60 
+      border border-[#7965C1]/40 
+      hover:border-[#C4B5FD]/60 
+      backdrop-blur-md 
+      px-3 py-1.5 
+      rounded-lg 
+      transition-all
+      cursor-pointer
+      focus:outline-none focus:ring-2 focus:ring-[#7F27FF]
+    "
+  >
+    <option value="" disabled className="bg-[#1E0B43] text-white">
+      Services
+    </option>
+
+    <option
+      value="/quiz/create"
+      className="bg-[#1E0B43] text-white"
+    >
+      Create AI powered quiz
+    </option>
+
+    <option
+      value="/roadmap/ai"
+      className="bg-[#1E0B43] text-white"
+    >
+      Get AI powered roadmap
+    </option>
+
+  </select>
+</motion.div>
+
 
           {isAuthenticated && (
             <motion.div
@@ -115,7 +152,7 @@ function AuthNavbar() {
               className="flex items-center gap-3"
             >
               <Link
-                href="/dashboard"
+                href="/user/dashboard"
                 className="hidden md:flex items-center gap-2 bg-[#2A1458]/60 px-3 py-1.5 rounded-lg hover:bg-[#2A1458] transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] flex items-center justify-center">
@@ -244,94 +281,92 @@ export default function HomePage() {
       <AuthNavbar />
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16 px-4">
-        {/* Background Elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-[#7F27FF]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#E4004B]/10 rounded-full blur-3xl"></div>
+     <section className="relative pt-20 pb-16 px-4">
+  {/* Background Elements */}
+  <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+    <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-[#7F27FF]/10 rounded-full blur-3xl"></div>
+    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#E4004B]/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <div className="container mx-auto max-w-6xl relative z-10">
+    <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="text-center lg:text-left"
+      >
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
+            Learn
+          </span>
+          ,
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
+            {" "}
+            Compete
+          </span>
+          , and <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
+            Master
+          </span>{" "}
+          with AI
+        </h1>
+        <p className="text-lg text-white/80 mb-8 max-w-2xl">
+          Create AI-powered quizzes, compete with friends, and follow
+          personalized learning roadmaps. Transform how you learn with
+          intelligent analytics and tailored educational experiences.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link href="/quiz/create" legacyBehavior>
+              <a
+                className="px-8 py-4 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] text-white font-medium flex items-center gap-2 shadow-lg shadow-[#E4004B]/30 cursor-pointer relative z-10"
+                aria-label="Create Quiz"
+              >
+                <Sparkles size={20} />
+                Create Your First Quiz
+              </a>
+            </Link>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link href="/roadmap/ai" legacyBehavior>
+              <a
+                className="px-8 py-4 rounded-full bg-transparent border border-[#7965C1] text-white font-medium flex items-center justify-center cursor-pointer relative z-10"
+                aria-label="AI powered roadmap"
+              >
+                AI powered roadmap
+              </a>
+            </Link>
+          </motion.div>
         </div>
+      </motion.div>
 
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              className="text-center lg:text-left"
-            >
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
-                  Learn
-                </span>
-                ,
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
-                  {" "}
-                  Compete
-                </span>
-                , and <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
-                  Master
-                </span>{" "}
-                with AI
-              </h1>
-              <p className="text-lg text-white/80 mb-8 max-w-2xl">
-                Create AI-powered quizzes, compete with friends, and follow
-                personalized learning roadmaps. Transform how you learn with
-                intelligent analytics and tailored educational experiences.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    href="/quiz/create"
-                    className="px-8 py-4 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] 
-      text-white font-medium flex items-center gap-2 shadow-lg shadow-[#E4004B]/30 cursor-pointer"
-                  >
-                    <Sparkles size={20} />
-                    Create Your First Quiz
-                  </Link>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    href="/how-it-works"
-                    className="px-8 py-4 rounded-full bg-transparent border border-[#7965C1] 
-      text-white font-medium flex items-center justify-center cursor-pointer"
-                  >
-                    See How It Works
-                  </Link>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="flex justify-center"
-            >
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-[#E4004B] to-[#7F27FF] rounded-3xl opacity-20 blur-xl"></div>
-                <div className="relative bg-[#251040]/50 backdrop-blur-md rounded-2xl border border-[#7965C1]/30 p-6 shadow-2xl">
-                  <Image
-                    src="/hero-gif.gif"
-                    alt="AI Learning Platform"
-                    width={500}
-                    height={400}
-                    className="rounded-lg"
-                    priority
-                  />
-                </div>
-              </div>
-            </motion.div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.7, delay: 0.2 }}
+        className="flex justify-center"
+      >
+        <div className="relative">
+          <div className="absolute -inset-4 bg-gradient-to-r from-[#E4004B] to-[#7F27FF] rounded-3xl opacity-20 blur-xl"></div>
+          <div className="relative bg-[#251040]/50 backdrop-blur-md rounded-2xl border border-[#7965C1]/30 p-6 shadow-2xl">
+            <Image
+              src="/hero-gif.gif"
+              alt="AI Learning Platform"
+              width={500}
+              height={400}
+              className="rounded-lg"
+              priority
+            />
           </div>
         </div>
-      </section>
+      </motion.div>
+    </div>
+  </div>
+</section>
+
 
       {/* Benefits Section */}
       <section className="py-16 px-4">

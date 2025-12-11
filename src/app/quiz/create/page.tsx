@@ -2,16 +2,16 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { 
-  Sparkles, 
-  Brain, 
-  Trophy, 
-  Users, 
-  Zap, 
-  ChevronRight, 
-  ArrowRight, 
-  BookOpen, 
-  User, 
+import {
+  Sparkles,
+  Brain,
+  Trophy,
+  Users,
+  Zap,
+  ChevronRight,
+  ArrowRight,
+  BookOpen,
+  User,
   LogOut,
   Target,
   Clock,
@@ -20,35 +20,35 @@ import {
   Sword,
   UsersRound,
   Calendar,
-  TrendingUp
+  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 
 function AuthNavbar() {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
   const isAuthenticated = status === "authenticated";
-  const router = useRouter()
+  const router = useRouter();
 
   const handleLogout = () => {
-    signOut({ callbackUrl: '/' });
+    signOut({ callbackUrl: "/" });
   };
 
-  if(status=='unauthenticated'){
-    router.push('/sign-up');
+  if (status == "unauthenticated") {
+    router.push("/sign-up");
     return;
   }
 
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#251040]/70 border-b border-[#7965C1]/20">
       <div className="container mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }} 
-          animate={{ opacity: 1, x: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-2"
         >
           <Link href="/" className="flex items-center gap-2">
@@ -72,7 +72,7 @@ function AuthNavbar() {
               </span>
             </Link>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,19 +84,48 @@ function AuthNavbar() {
               </span>
             </Link>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Link href="/services">
-              <span className="text-sm font-medium text-white/90 hover:text-white transition-colors">
+            <select
+              aria-label="Services"
+              defaultValue=""
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!val) return;
+                window.location.href = val;
+              }}
+              className="
+      text-sm font-medium 
+      text-white/90 
+      bg-[#2A1458]/60 
+      border border-[#7965C1]/40 
+      hover:border-[#C4B5FD]/60 
+      backdrop-blur-md 
+      px-3 py-1.5 
+      rounded-lg 
+      transition-all
+      cursor-pointer
+      focus:outline-none focus:ring-2 focus:ring-[#7F27FF]
+    "
+            >
+              <option value="" disabled className="bg-[#1E0B43] text-white">
                 Services
-              </span>
-            </Link>
+              </option>
+
+              <option value="/quiz/create" className="bg-[#1E0B43] text-white">
+                Create AI powered quiz
+              </option>
+
+              <option value="/roadmap/ai" className="bg-[#1E0B43] text-white">
+                Get AI powered roadmap
+              </option>
+            </select>
           </motion.div>
-          
+
           {isAuthenticated && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -116,19 +145,21 @@ function AuthNavbar() {
           {isLoading ? (
             <div className="h-8 w-8 rounded-full bg-gray-700 animate-pulse"></div>
           ) : isAuthenticated ? (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              animate={{ opacity: 1, scale: 1 }} 
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
               className="flex items-center gap-3"
             >
-              <Link 
-                href="/dashboard" 
+              <Link
+                href="/user/dashboard"
                 className="hidden md:flex items-center gap-2 bg-[#2A1458]/60 px-3 py-1.5 rounded-lg hover:bg-[#2A1458] transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#E4004B] to-[#7F27FF] flex items-center justify-center">
                   <User size={16} className="text-white" />
                 </div>
-                <span className="text-sm text-white">Hi, {session.user?.name}</span>
+                <span className="text-sm text-white">
+                  Hi, {session.user?.name}
+                </span>
               </Link>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -181,17 +212,22 @@ function UserDashboard() {
   return (
     <div className="relative bg-gradient-to-br from-[#251040] to-[#2A1458] py-16 px-4">
       <div className="container mx-auto max-w-6xl">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">{session.user?.name}</span>!
+            Welcome back,{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
+              {session.user?.name}
+            </span>
+            !
           </h2>
           <p className="text-white/80 max-w-2xl mx-auto">
-            Continue your learning journey with personalized quizzes and progress tracking.
+            Continue your learning journey with personalized quizzes and
+            progress tracking.
           </p>
         </motion.div>
 
@@ -201,15 +237,17 @@ function UserDashboard() {
             { label: "Average Score", value: "87%" },
             { label: "Topics Mastered", value: 5 },
           ].map((stat, i) => (
-            <motion.div 
-              key={i} 
-              initial={{ opacity: 0, y: 20 }} 
-              whileInView={{ opacity: 1, y: 0 }} 
-              viewport={{ once: true }} 
-              transition={{ delay: 0.1 * i }} 
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 * i }}
               className="bg-[#251040]/70 backdrop-blur-sm rounded-xl p-6 border border-[#7965C1]/30"
             >
-              <div className="text-2xl font-bold text-white mb-2">{stat.value}</div>
+              <div className="text-2xl font-bold text-white mb-2">
+                {stat.value}
+              </div>
               <div className="text-white/70">{stat.label}</div>
             </motion.div>
           ))}
@@ -234,7 +272,7 @@ export default function CreateQuiz() {
 
     setLoading(true);
     try {
-      const res = await axios.post('/api/quiz/create', { topic, difficulty });
+      const res = await axios.post("/api/quiz/create", { topic, difficulty });
 
       if (res.data.success) {
         toast.success("Quiz created successfully!");
@@ -270,10 +308,15 @@ export default function CreateQuiz() {
             className="text-center mb-12"
           >
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Create <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">AI-Powered Quizzes</span> in Seconds
+              Create{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7965C1] to-[#C4B5FD]">
+                AI-Powered Quizzes
+              </span>{" "}
+              in Seconds
             </h1>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Transform any topic into an engaging learning experience with our advanced AI technology.
+              Transform any topic into an engaging learning experience with our
+              advanced AI technology.
             </p>
           </motion.div>
 
@@ -288,10 +331,14 @@ export default function CreateQuiz() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-white mb-2">Create Your Quiz</h2>
-                    <p className="text-white/70">Enter your content and let AI do the magic.</p>
+                    <h2 className="text-2xl font-bold text-white mb-2">
+                      Create Your Quiz
+                    </h2>
+                    <p className="text-white/70">
+                      Enter your content and let AI do the magic.
+                    </p>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-center gap-3 text-white/80">
                       <div className="w-6 h-6 rounded-full bg-[#7F27FF]/20 flex items-center justify-center">
@@ -335,7 +382,7 @@ export default function CreateQuiz() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-6">
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">
@@ -355,15 +402,15 @@ export default function CreateQuiz() {
                       Difficulty Level
                     </label>
                     <div className="grid grid-cols-3 gap-2">
-                      {['easy', 'medium', 'hard'].map((level) => (
+                      {["easy", "medium", "hard"].map((level) => (
                         <button
                           key={level}
                           type="button"
                           onClick={() => setDifficulty(level)}
                           className={`py-3 rounded-lg text-sm font-medium transition-all ${
                             difficulty === level
-                              ? 'bg-[#7F27FF] text-white shadow-md'
-                              : 'bg-[#2A1458]/60 text-white/70 hover:bg-[#2A1458]'
+                              ? "bg-[#7F27FF] text-white shadow-md"
+                              : "bg-[#2A1458]/60 text-white/70 hover:bg-[#2A1458]"
                           }`}
                         >
                           {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -398,7 +445,10 @@ export default function CreateQuiz() {
                     <div className="text-center">
                       <p className="text-sm text-[#C4B5FD]">
                         Want to save your quizzes?{" "}
-                        <Link href="/sign-up" className="text-[#7F27FF] hover:text-white transition-colors">
+                        <Link
+                          href="/sign-up"
+                          className="text-[#7F27FF] hover:text-white transition-colors"
+                        >
                           Sign up free
                         </Link>
                       </p>
@@ -420,9 +470,12 @@ export default function CreateQuiz() {
             viewport={{ once: true }}
             className="bg-gradient-to-r from-[#7F27FF]/20 to-[#E4004B]/20 rounded-2xl p-8 border border-[#7965C1]/30 text-center"
           >
-            <h3 className="text-xl font-bold text-white mb-4">Unlock Full Features</h3>
+            <h3 className="text-xl font-bold text-white mb-4">
+              Unlock Full Features
+            </h3>
             <p className="text-[#C4B5FD] mb-6">
-              Sign up to save your quizzes, track progress, and access detailed AI-powered analytics
+              Sign up to save your quizzes, track progress, and access detailed
+              AI-powered analytics
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/sign-up">
