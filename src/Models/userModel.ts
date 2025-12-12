@@ -5,6 +5,7 @@ export interface User extends Document {
   email: string;
   fullname: string;
   password: string;
+  credits:number,
   verifyCode: string;
   isVerified: boolean;
   verifyCodeExpiry: Date;
@@ -39,6 +40,11 @@ const userSchema: Schema = new Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
+    },
+
+    credits:{
+      type:Number,
+      default:30
     },
 
     verifyCode: {

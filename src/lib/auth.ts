@@ -32,26 +32,31 @@ export const authOptions: AuthOptions = {
           email: user.email,
           username: user.username,
           name: user.fullname,
+          credits:user.credits
         };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.username = user.username;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token) {
-        session.user._id = token.id as string;
-        session.user.username = token.username;
-      }
-      return session;
-    },
+  async jwt({ token, user }) {
+    if (user) {
+      token.id = user.id;
+      token.username = user.username;
+      token.credits = user.credits;
+    }
+    return token;
   },
+
+  async session({ session, token }) {
+    if (session.user && token) {
+      session.user._id = token.id as string;
+      session.user.username = token.username as string;
+      session.user.credits = token.credits as number;
+    }
+    return session;
+  },
+},
+
   pages: {
     signIn: "/login",
   },

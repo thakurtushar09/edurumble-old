@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Added useEffect
 import {
   Sparkles,
   Brain,
@@ -207,6 +207,39 @@ function AuthNavbar() {
 
 function UserDashboard() {
   const { data: session } = useSession();
+  const [stats, setStats] = useState({
+    quizzesCreated: 0,
+    averageScore: "0%",
+    topicsMastered: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (session) {
+      // Fetch user stats from API
+      const fetchUserStats = async () => {
+        try {
+          setLoading(true);
+          // In a real app, you would call your API here
+          // For now, we'll simulate API call
+          setTimeout(() => {
+            setStats({
+              quizzesCreated: 12,
+              averageScore: "87%",
+              topicsMastered: 5,
+            });
+            setLoading(false);
+          }, 500);
+        } catch (error) {
+          console.error("Error fetching user stats:", error);
+          setLoading(false);
+        }
+      };
+
+      fetchUserStats();
+    }
+  }, [session]);
+
   if (!session) return null;
 
   return (
@@ -233,9 +266,9 @@ function UserDashboard() {
 
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { label: "Quizzes Created", value: 12 },
-            { label: "Average Score", value: "87%" },
-            { label: "Topics Mastered", value: 5 },
+            { label: "Quizzes Created", value: stats.quizzesCreated },
+            { label: "Average Score", value: stats.averageScore },
+            { label: "Topics Mastered", value: stats.topicsMastered },
           ].map((stat, i) => (
             <motion.div
               key={i}
@@ -245,10 +278,19 @@ function UserDashboard() {
               transition={{ delay: 0.1 * i }}
               className="bg-[#251040]/70 backdrop-blur-sm rounded-xl p-6 border border-[#7965C1]/30"
             >
-              <div className="text-2xl font-bold text-white mb-2">
-                {stat.value}
-              </div>
-              <div className="text-white/70">{stat.label}</div>
+              {loading ? (
+                <div className="animate-pulse">
+                  <div className="h-8 w-24 bg-[#7965C1]/20 rounded mb-2"></div>
+                  <div className="h-4 w-32 bg-[#7965C1]/20 rounded"></div>
+                </div>
+              ) : (
+                <>
+                  <div className="text-2xl font-bold text-white mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-white/70">{stat.label}</div>
+                </>
+              )}
             </motion.div>
           ))}
         </div>
@@ -261,8 +303,27 @@ export default function CreateQuiz() {
   const router = useRouter();
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("easy");
+  const [numQuestions, setNumQuestions] = useState<5 | 10 | 15 | 20>(5); // Fixed type
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const [creditBalance, setCreditBalance] = useState(0);
+
+  // Credit mapping for different numbers of questions
+  const creditMapping: Record<5 | 10 | 15 | 20, number> = {
+    5: 10,
+    10: 15,
+    15: 20,
+    20: 25,
+  };
+
+  // Fetch user credit balance if logged in
+  useEffect(() => {
+    if (session) {
+      // In a real app, you would fetch this from your API
+      // For now, we'll simulate it
+      setCreditBalance(125); // Example balance
+    }
+  }, [session]);
 
   const handleQuiz = async () => {
     if (!topic) {
@@ -270,9 +331,19 @@ export default function CreateQuiz() {
       return;
     }
 
+    // Check credit balance for logged-in users
+    if (session && creditBalance < creditMapping[numQuestions]) {
+      toast.error("Insufficient credits. Please purchase more credits.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await axios.post("/api/quiz/create", { topic, difficulty });
+      const res = await axios.post("/api/quiz/create", {
+        topic,
+        difficulty,
+        numQuestions,
+      });
 
       if (res.data.success) {
         toast.success("Quiz created successfully!");
@@ -287,6 +358,9 @@ export default function CreateQuiz() {
       setLoading(false);
     }
   };
+
+  // Calculate total credits
+  const totalCredits = creditMapping[numQuestions];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1E0B43] via-[#2A1458] to-[#15092E]">
@@ -360,6 +434,22 @@ export default function CreateQuiz() {
                     </div>
                   </div>
 
+                  {/* Credit Info Box */}
+                  <div className="bg-gradient-to-r from-[#7F27FF]/20 to-[#E4004B]/20 rounded-xl p-4 border border-[#7965C1]/30">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-[#C4B5FD] font-medium">
+                        Credit System
+                      </span>
+                      <div className="px-2 py-1 bg-[#7F27FF] text-white text-xs rounded-full">
+                        {totalCredits} credits
+                      </div>
+                    </div>
+                    <p className="text-xs text-white/70">
+                      Each quiz costs credits based on the number of questions.
+                      Save progress and access detailed analytics by signing up.
+                    </p>
+                  </div>
+
                   {/* Quick Links */}
                   <div className="pt-4 border-t border-[#7965C1]/20">
                     <p className="text-sm text-white/70 mb-2">Quick Links:</p>
@@ -374,9 +464,9 @@ export default function CreateQuiz() {
                           Dashboard
                         </span>
                       </Link>
-                      <Link href="/login">
+                      <Link href="/pricing">
                         <span className="px-3 py-1 bg-[#2A1458]/60 text-[#C4B5FD] text-xs rounded-full hover:bg-[#2A1458] transition-colors">
-                          Login
+                          Pricing & Credits
                         </span>
                       </Link>
                     </div>
@@ -395,6 +485,36 @@ export default function CreateQuiz() {
                       placeholder="e.g., Machine Learning, World History, JavaScript..."
                       className="w-full px-4 py-3.5 rounded-xl bg-[#2A1458]/60 text-white border border-[#7965C1]/40 focus:border-[#E4004B] focus:ring-2 focus:ring-[#E4004B]/20 outline-none transition-all"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-white text-sm font-medium mb-2">
+                      Number of Questions
+                    </label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {([5, 10, 15, 20] as const).map((num) => (
+                        <button
+                          key={num}
+                          type="button"
+                          onClick={() => setNumQuestions(num)}
+                          className={`
+                            py-3 rounded-lg text-sm font-medium transition-all relative
+                            ${numQuestions === num
+                              ? "bg-gradient-to-r from-[#7F27FF] to-[#E4004B] text-white shadow-md"
+                              : "bg-[#2A1458]/60 text-white/70 hover:bg-[#2A1458]"
+                            }
+                          `}
+                        >
+                          <div className="text-xs absolute -top-2 right-1 bg-[#E4004B] text-white px-1.5 py-0.5 rounded-full">
+                            {creditMapping[num]} credits
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-base font-bold">{num}</span>
+                            <span className="text-xs opacity-80">questions</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <div>
@@ -423,7 +543,7 @@ export default function CreateQuiz() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleQuiz}
-                    disabled={loading}
+                    disabled={loading || !topic}
                     className="w-full py-4 rounded-xl bg-gradient-to-r from-[#E4004B] to-[#7F27FF] text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#E4004B]/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
@@ -433,23 +553,39 @@ export default function CreateQuiz() {
                       </div>
                     ) : (
                       <>
-                        <Sparkles size={18} />
-                        Generate Quiz
+                        <div className="flex items-center gap-2">
+                          <Sparkles size={18} />
+                          Generate Quiz
+                          <span className="text-xs bg-white/20 px-2 py-1 rounded-full ml-2">
+                            {totalCredits} credits
+                          </span>
+                        </div>
                         <ArrowRight size={16} />
                       </>
                     )}
                   </motion.button>
 
+                  {/* Credit Balance for logged in users */}
+                  {session && (
+                    <div className="flex items-center justify-center gap-2 text-sm text-[#C4B5FD]">
+                      <div className="w-2 h-2 rounded-full bg-[#7F27FF] animate-pulse"></div>
+                      Your balance:{" "}
+                      <span className="font-bold text-white">
+                        {creditBalance} credits
+                      </span>
+                    </div>
+                  )}
+
                   {/* Sign Up Prompt for non-logged in users */}
                   {!session && (
                     <div className="text-center">
                       <p className="text-sm text-[#C4B5FD]">
-                        Want to save your quizzes?{" "}
+                        Want to save your quizzes and track credits?{" "}
                         <Link
                           href="/sign-up"
-                          className="text-[#7F27FF] hover:text-white transition-colors"
+                          className="text-[#7F27FF] hover:text-white transition-colors font-medium"
                         >
-                          Sign up free
+                          Sign up free (get 100 credits)
                         </Link>
                       </p>
                     </div>
@@ -473,10 +609,35 @@ export default function CreateQuiz() {
             <h3 className="text-xl font-bold text-white mb-4">
               Unlock Full Features
             </h3>
-            <p className="text-[#C4B5FD] mb-6">
-              Sign up to save your quizzes, track progress, and access detailed
-              AI-powered analytics
-            </p>
+            <div className="grid md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-[#251040]/60 rounded-xl p-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#7F27FF] to-[#E4004B] flex items-center justify-center mx-auto mb-3">
+                  <Trophy size={20} className="text-white" />
+                </div>
+                <h4 className="text-white font-medium mb-2">Free Credits</h4>
+                <p className="text-[#C4B5FD] text-sm">
+                  Get 100 free credits upon signup
+                </p>
+              </div>
+              <div className="bg-[#251040]/60 rounded-xl p-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#7F27FF] to-[#E4004B] flex items-center justify-center mx-auto mb-3">
+                  <BookOpen size={20} className="text-white" />
+                </div>
+                <h4 className="text-white font-medium mb-2">Save Quizzes</h4>
+                <p className="text-[#C4B5FD] text-sm">
+                  Save and revisit your created quizzes
+                </p>
+              </div>
+              <div className="bg-[#251040]/60 rounded-xl p-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#7F27FF] to-[#E4004B] flex items-center justify-center mx-auto mb-3">
+                  <BarChart3 size={20} className="text-white" />
+                </div>
+                <h4 className="text-white font-medium mb-2">Analytics</h4>
+                <p className="text-[#C4B5FD] text-sm">
+                  Track progress and performance
+                </p>
+              </div>
+            </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/sign-up">
                 <motion.button
@@ -484,7 +645,7 @@ export default function CreateQuiz() {
                   whileTap={{ scale: 0.95 }}
                   className="px-6 py-3 bg-gradient-to-r from-[#E4004B] to-[#7F27FF] text-white font-medium rounded-full"
                 >
-                  Sign Up Free
+                  Sign Up Free (100 Credits)
                 </motion.button>
               </Link>
               <Link href="/login">

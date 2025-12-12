@@ -31,7 +31,8 @@ function AuthNavbar() {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
   const isAuthenticated = status === "authenticated";
-
+  const userCredits = (session as any)?.user?.credits || 0;
+  
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
   };
@@ -79,53 +80,51 @@ function AuthNavbar() {
           </motion.div>
 
           <motion.div
-  initial={{ opacity: 0, y: -10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.2 }}
->
-  <select
-    aria-label="Services"
-    defaultValue=""
-    onChange={(e) => {
-      const val = e.target.value;
-      if (!val) return;
-      window.location.href = val;
-    }}
-    className="
-      text-sm font-medium 
-      text-white/90 
-      bg-[#2A1458]/60 
-      border border-[#7965C1]/40 
-      hover:border-[#C4B5FD]/60 
-      backdrop-blur-md 
-      px-3 py-1.5 
-      rounded-lg 
-      transition-all
-      cursor-pointer
-      focus:outline-none focus:ring-2 focus:ring-[#7F27FF]
-    "
-  >
-    <option value="" disabled className="bg-[#1E0B43] text-white">
-      Services
-    </option>
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <select
+              aria-label="Services"
+              defaultValue=""
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!val) return;
+                window.location.href = val;
+              }}
+              className="
+                text-sm font-medium 
+                text-white/90 
+                bg-[#2A1458]/60 
+                border border-[#7965C1]/40 
+                hover:border-[#C4B5FD]/60 
+                backdrop-blur-md 
+                px-3 py-1.5 
+                rounded-lg 
+                transition-all
+                cursor-pointer
+                focus:outline-none focus:ring-2 focus:ring-[#7F27FF]
+              "
+            >
+              <option value="" disabled className="bg-[#1E0B43] text-white">
+                Services
+              </option>
 
-    <option
-      value="/quiz/create"
-      className="bg-[#1E0B43] text-white"
-    >
-      Create AI powered quiz
-    </option>
+              <option
+                value="/quiz/create"
+                className="bg-[#1E0B43] text-white"
+              >
+                Create AI powered quiz
+              </option>
 
-    <option
-      value="/roadmap/ai"
-      className="bg-[#1E0B43] text-white"
-    >
-      Get AI powered roadmap
-    </option>
-
-  </select>
-</motion.div>
-
+              <option
+                value="/roadmap/ai"
+                className="bg-[#1E0B43] text-white"
+              >
+                Get AI powered roadmap
+              </option>
+            </select>
+          </motion.div>
 
           {isAuthenticated && (
             <motion.div
@@ -144,13 +143,25 @@ function AuthNavbar() {
 
         <div className="flex items-center gap-4">
           {isLoading ? (
-            <div className="h-8 w-8 rounded-full bg-gray-700 animate-pulse"></div>
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-20 rounded-lg bg-gray-700 animate-pulse"></div>
+              <div className="h-8 w-8 rounded-full bg-gray-700 animate-pulse"></div>
+            </div>
           ) : isAuthenticated ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="flex items-center gap-3"
             >
+              {/* Credits Display */}
+              <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-[#2A1458]/60 border border-[#7965C1]/30">
+                <Zap size={16} className="text-yellow-400" />
+                <div className="flex flex-col">
+                  <span className="text-xs text-white/70">Credits</span>
+                  <span className="text-sm font-bold text-white">{userCredits}</span>
+                </div>
+              </div>
+              
               <Link
                 href="/user/dashboard"
                 className="hidden md:flex items-center gap-2 bg-[#2A1458]/60 px-3 py-1.5 rounded-lg hover:bg-[#2A1458] transition-colors"
@@ -523,13 +534,13 @@ export default function HomePage() {
               skills with AI-powered education.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/signup">
+              <Link href="/pricing">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="px-8 py-3.5 bg-white text-[#7F27FF] font-medium rounded-full shadow-md"
                 >
-                  Get Started Free
+                  See Pricing
                 </motion.button>
               </Link>
               <Link href="/how-it-works">
